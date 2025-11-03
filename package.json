@@ -1,0 +1,27 @@
+{
+  "name": "academy-node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+  "dev": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+
+    "type": "module"    ,
+
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tumruu111/Academy-Node.js.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tumruu111/Academy-Node.js/issues"
+  },
+  "homepage": "https://github.com/Tumruu111/Academy-Node.js#readme"
+}
+
+
+
+
