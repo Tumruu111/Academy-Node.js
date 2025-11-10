@@ -22,19 +22,29 @@ function writeUsers(users) {
   const line = users.map((u) => ` ${u.username}, ${u.pin}, ${u.balance}`);
 
   fs.writeFileSync("users.txt", line.join(" \n "));
-}
-
-// logTransaction(): transactions.txt-д бичих
-function logTransaction(username, type, amount) {
-  // 👉 Гүйлгээний лог бичих код
 };
+function logTransaction() {
+  const line = transactions.map((t) => `${t.username}, ${t.type}, ${t.amount}`);
+  fs.writeFileSync("transaction.txt", line.join("/n"));
+};
+
+function readTransaction(transactions){
+  if (!fs.existsSync("transaction.txt")) return[];
+
+  const data = fs.readFileSync("transaction.txt", "utf-8").trim();
+
+  return data.split("\n").map((line) => {
+
+    const [username, type, amount] = line.split(",");
+    return {username, type, amount};
+  });
+}
 
 function register() {
   const user = readUsers();
 
   rl.question("Нэвтрэх нэрээ оруулна уу", (username) => {
     rl.question("password ", (pin) => {
-    
       rl.question("balance", (balance) => {
         const newUser = { username, pin, balance };
         user.push(newUser);
@@ -51,18 +61,18 @@ function login() {
   );
 
 
-    rl.question("Нэвтрэх нэрээ оруулна уу", (username) => {
-    rl.question("password ", (pin) => {
+    rl.question("Нэвтрэх нэрээ оруулна уу?", (username) => {
+    rl.question("Password оруулна уу? ", (pin) => {
         
 
        for (const element of user) {
       
          if(username === element.username && pin === element.pin){
-              console.log("Amjilttai nevterlee")
+              console.log("Амжилттай нэвтэрлээ!")
              showMenu()
 
          }else{
-            console.log("bvrtgelgui bna");
+            console.log("Бүртгэлгүй байна!");
          
          }
             
@@ -74,14 +84,20 @@ function login() {
 
 function showMenu() {
     const user = readUsers ();
-    console.log( "1. Үлдэгдэл шалгах  2. Мөнгө нэмэх 3. Мөнгө авах 4. Гарах  Хэрэглэгчийн сонголтоор switch case ашиглах ")
-    rl.question("Uildelee songono uu?:", (startChoice) => {
+    const transaction = readTransaction();
+    console.log( "1. Үлдэгдэл шалгах  2. Мөнгө нэмэх 3. Мөнгө авах 4. Гарах ")
+    rl.question("Үйлдэлээ сонгоно уу?:", (startChoice) => {
         if(startChoice === "1"){
-           console.log( user.map( ({ username, balance }) => ({ username, balance }) ) );
+           console.log( user.map( ({ username, balance }) => ({ username, balance }) ) )
+            showMenu();
         } else if (startChoice === "2"){
-            rl.question("Mungun dungee oruulna uu?:", (deposit()))
-
+            rl.question("Мөнгөн дүнгээ оруулна уу?:", (depositAmount) => {
+               console.log( user.map( ({ username, balance })))
+            });
         }
+        const newTransaction = { username, type, amount }; 
+        transactions.push (newTransaction);
+        logTransaction(transaction)
     }
 )};
 
