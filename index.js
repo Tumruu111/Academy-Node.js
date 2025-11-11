@@ -1,116 +1,46 @@
-import fs, { read } from "fs";
-import readline from "readline";
-import { start } from "repl";
+import fs from "node: fs/promises";
+import inquirer from "inquirer";
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
-
-function readUsers() {
-  if (!fs.existsSync("users.txt")) return [];
-
-  const data = fs.readFileSync("users.txt", "utf-8").trim();
-
-  return data.split("\n").map((line) => {
-
-    const [username, pin, balance] = line.split(",");
-    return { username, pin, balance: parseInt(balance) };
-  });
-}
-function writeUsers(users) {
-  const line = users.map((u) => ` ${u.username}, ${u.pin}, ${u.balance}`);
-
-  fs.writeFileSync("users.txt", line.join(" \n "));
-};
-function logTransaction() {
-  const line = transactions.map((t) => `${t.username}, ${t.type}, ${t.amount}`);
-  fs.writeFileSync("transaction.txt", line.join("/n"));
-};
-
-function readTransaction(transactions){
-  if (!fs.existsSync("transaction.txt")) return[];
-
-  const data = fs.readFileSync("transaction.txt", "utf-8").trim();
-
-  return data.split("\n").map((line) => {
-
-    const [username, type, amount] = line.split(",");
-    return {username, type, amount};
-  });
+getUsers = async () => {
+  const users = await fs.readFile("users.json","utf-8")
 }
 
-function register() {
-  const user = readUsers();
+const { auth } = await prompt([
+  {
+    type: "selet",
+    name: "auth",
+    message: "Login or Signup",
+    choices: ["Login", "Signup"]
 
-  rl.question("Нэвтрэх нэрээ оруулна уу", (username) => {
-    rl.question("password ", (pin) => {
-      rl.question("balance", (balance) => {
-        const newUser = { username, pin, balance };
-        user.push(newUser);
-        writeUsers(user);
-      });
-    });
-  });
-}
-
-function login() {
-      const user = readUsers();
-  console.log(
-    " ==== ATM MENU ====   1. Үлдэгдэл шалгах 2. Мөнгө нэмэх  3. Мөнгө авах 4. Гарах ",
-  );
-
-
-    rl.question("Нэвтрэх нэрээ оруулна уу?", (username) => {
-    rl.question("Password оруулна уу? ", (pin) => {
-        
-
-       for (const element of user) {
-      
-         if(username === element.username && pin === element.pin){
-              console.log("Амжилттай нэвтэрлээ!")
-             showMenu()
-
-         }else{
-            console.log("Бүртгэлгүй байна!");
-         
-         }
-            
-         } 
-  
-    });
-  });
-};
-
-function showMenu() {
-    const user = readUsers ();
-    const transaction = readTransaction();
-    console.log( "1. Үлдэгдэл шалгах  2. Мөнгө нэмэх 3. Мөнгө авах 4. Гарах ")
-    rl.question("Үйлдэлээ сонгоно уу?:", (startChoice) => {
-        if(startChoice === "1"){
-           console.log( user.map( ({ username, balance }) => ({ username, balance }) ) )
-            showMenu();
-        } else if (startChoice === "2"){
-            rl.question("Мөнгөн дүнгээ оруулна уу?:", (depositAmount) => {
-               console.log( user.map( ({ username, balance })))
-            });
-        }
-        const newTransaction = { username, type, amount }; 
-        transactions.push (newTransaction);
-        logTransaction(transaction)
-    }
-)};
-
-
-console.log("==== ATM SYSTEM ====  1. Нэвтрэх 2. Бүртгүүлэх ");
-
-rl.question("Сонголтоо оруулна уу: ", (startChoice) => {
-  if (startChoice === "1") {
-    login();
-  } else if (startChoice === "2") {
-    register();
-  } else {
-    console.log("⚠️ Буруу сонголт!");
-    rl.close();
   }
+]);
+
+if (auth === "Login"){
+  const { username, password } = await inquirer.prompt([
+   {
+    type: "input",
+    name: "username",
+    message: "Username oruulna uu"
+   }
+   {
+    type: "input",
+    name: "password",
+    message: "Password oruulna uu"
+   }
+  ]);
+}else{
+  console.log
+}
+
+const users = await getUsers();
+
+const user = users.find(value => {
+  return value.username === username && value.password === password;
 });
+
+if (!user){
+  console.log("Username, Password buruu bn!")
+}
+
+
+
