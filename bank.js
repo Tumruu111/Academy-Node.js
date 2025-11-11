@@ -31,6 +31,9 @@ export const bankAnswer = async (users, user) => {
     case "check-balance":
       await checkBalance(users, user);
       break;
+    case "transaction":
+      await transaction(users, user);
+      break;
     case "exit":
       process.exit();
   }
@@ -99,7 +102,7 @@ const withdraw =  async (users, user) => {
     return await updateUser(users, user, amount, "withdraw");
 };
 
-const history = async (user) => {
+const history = async (users, amount, type, user) => {
     const historyRawData = await fs.readFile("history.json", "utf-8");
     const history = JSON.parse(historyRawData);
 
@@ -116,3 +119,7 @@ const checkBalance = async (user) => {
     
     
 };
+
+const transaction = (users, user) => {
+  
+}
