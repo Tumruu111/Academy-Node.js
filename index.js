@@ -1,12 +1,7 @@
-import http from "http";
+import express from "express";
 
-const server = http.createServer((req, res) => {
-  if (req.method === "GET") {
-    return res.end("Hello World GEt");
-  }
-  res.end("Hello World POST");
+const app = express();
+
+app.listen(3000,() => {
+  console.log("3000");
 });
-
-server.listen(3000);
-
-console.log("server listening on 3000");
