@@ -103,7 +103,7 @@ const history = async (user) => {
     const historyRawData = await fs.readFile("history.json", "utf-8");
     const history = JSON.parse(historyRawData);
 
-    const userHistories = history[user.balance, user.type, user.amount] || [];
+    const userHistories = history[user.balance, user.type, user.amount];
     history[user.username] = userHistories;
     console.log("Tanii history", userHistories);
 
