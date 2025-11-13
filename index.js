@@ -1,104 +1,12 @@
-import fs from "node:fs/promises";
-import inquirer from "inquirer";
-import { bankAnswer } from "./bank.js";
+import http from "http";
 
-const getUsers = async () => {
-  const userRawData = await fs.readFile("users.json", "utf-8");
-
-  const users = JSON.parse(userRawData);
-
-  return users;
-};
-
-const login = async () => {
-  const { username, password } = await inquirer.prompt([
-    {
-      type: "input",
-      name: "username",
-      message: "Enter your username"
-    },
-    {
-      type: "password",
-      name: "password",
-      message: "Enter your password"
-    }
-  ]);
-
-  const users = await getUsers();
-
-  const user = users.find(value => {
-    return value.username === username && value.password === password;
-  });
-
-  if (!user) {
-    console.log("username eswel password buruu bn!");
-    await auth();
-  } else {
-    return bankAnswer(users, user);
+const server = http.createServer((req, res) => {
+  if (req.method === "GET") {
+    return res.end("Hello World GEt");
   }
-};
+  res.end("Hello World POST");
+});
 
-const signup = async () => {
-  const { username, password, passwordVerify } = await inquirer.prompt([
-    {
-      type: "input",
-      name: "username",
-      message: "Enter your username"
-    },
-    {
-      type: "password",
-      name: "password",
-      message: "Enter your password"
-    },
-    {
-      type: "password",
-      name: "passwordVerify",
-      message: "Enter your password again"
-    }
-  ]);
+server.listen(3000);
 
-  if (password !== passwordVerify) {
-    console.log("Password validation failed!");
-    return signup();
-  }
-
-  const users = await getUsers();
-
-  const user = users.find(value => {
-    return value.username === username;
-  });
-
-  if (user) {
-    console.log("Username not valid");
-    return signup();
-  }
-
-  users.push({ username, password, balance: 0 });
-
-  const userData = JSON.stringify(users);
-
-  await fs.writeFile("users.json", userData, "utf-8");
-
-  console.log("Amjilttai burtguulle!");
-
-  return login();
-};
-
-const auth = async () => {
-  const { authOption } = await inquirer.prompt([
-    {
-      type: "select",
-      name: "authOption",
-      message: "Login Or Signup",
-      choices: ["Login", "Signup"]
-    }
-  ]);
-
-  if (authOption === "Login") {
-    return login();
-  } else {
-    return signup();
-  }
-};
-
-auth();
+console.log("server listening on 3000");
