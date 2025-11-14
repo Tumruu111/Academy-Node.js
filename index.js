@@ -41,8 +41,12 @@ app.post("/create-user", async (req, res) => {
 });
 
 app.put("/update-user/:id", async (req, res) => {
-  console.log(req.params);
-  console.log(req.body);
+  const updateData = { firstName, age } = req.query;
+
+  
+
+  await fs.writeFile("users.json", updateData, "utf-8");
+
   res.send("Success");
 });
 
