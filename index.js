@@ -1,103 +1,57 @@
-import inquirer from "inquirer";
+import express from "express";
 import fs from "node:fs/promises";
 
-export const bankAnswer = async (users, user) => {
-  const { bankOption } = await inquirer.prompt([
-    {
-      type: "select",
-      name: "bankOption",
-      message: "Login Or Signup",
-      choices: [
-        { name: "Deposit", value: "deposit" },
-        { name: "Withdraw", value: "withdraw" },
-        { name: "History all", value: "history-all" },
-        { name: "History deposit", value: "history-deposit" },
-        { name: "History withdraw", value: "history-deposit" },
-        { name: "Check balance", value: "check-balance" },
-        { name: "Transaction", value: "transaction" },
-        { name: "Exit", value: "exit" }
-      ]
-    }
-  ]);
+const app = express();
+app.use(express.json());
 
-  switch (bankOption) {
-    case "deposit":
-      await deposit(users, user);
-      break;
-    case "withdraw":
-      await withdraw(users, user);
-      break;
-    case "history":
-      console.log("history");
-      break;
-    case "check-balance":
-      console.log("check-balance");
-      break;
-    case "exit":
-      process.exit();
-  }
-};
+const usersFile = "users.json";
 
-const updateUser = async (users, user, amount, type) => {
-  const userData = JSON.stringify(users);
-
-  await fs.writeFile("users.json", userData, "utf-8");
-
-  const historyRawData = await fs.readFile("history.json", "utf-8");
-  const history = JSON.parse(historyRawData);
-
-  const userHistories = history[user.username] || [];
-
-  userHistories.push({
-    type,
-    amount,
-    balance: user.balance,
-    currentBalance: 0
-  });
-
-  history[user.username] = userHistories;
-
-  const historyData = JSON.stringify(history);
-
-  await fs.writeFile("history.json", historyData, "utf-8");
-  console.log("Amjilttai");
-
-  return;
-};
-
-const deposit = async (users, user) => {
-  let balance = parseInt(user.balance) || 0;
-
-  const { amount } = await inquirer.prompt([
-    {
-      type: "number",
-      name: "amount",
-      message: "Hediin orlogo hiih we?"
-    }
-  ]);
-
-  balance = balance + amount;
-
-  user.balance = balance;
-
-  return await updateUser(users, user, amount, "deposit");
-};
-
-const withdraw =  async (users, user) => {
-    let balance = parseInt(user.balance) || 0;
-
-
-    const { amount } = await inquirer.prompt([
-        {
-            type: "number",
-            name: "amount",
-            message: "Hediin zarlaga avah ve?"
-        }
-    ]);
-
-    balance = balance - amount;
-
-    user.balance = balance;
-    
-    return await updateUser(users, user, amount, "withdraw");
+async function loadUsers() {
+  const data = await fs.readFile(usersFile, "utf-8");
+  return JSON.parse(data);
 }
+
+async function saveUsers(users) {
+  await fs.writeFile(usersFile, JSON.stringify(users, null, 2));
+}
+
+app.get("/get-user/:id", async (req, res) => {
+  const { id } = req.params;
+  const users = await loadUsers();
+  const user = users.find((u) => u.id == id);
+
+  if (!user) return res.status(404).send("User not found");
+  res.json(user);
+});
+
+app.get("/get-users", async (req, res) => {
+  const users = await loadUsers();
+  res.json(users);
+});
+
+app.post("/create-user", async (req, res) => {
+  const newUser = { id: Date.now().toString(), ...req.body };
+  const users = await loadUsers();
+  users.push(newUser);
+  await saveUsers(users);
+  res.status(201).json({ message: "User created", user: newUser });
+});
+
+app.put("/update-user/:id", async (req, res) => {
+  const { id } = req.params;
+  const updateData = req.body;
+  const users = await loadUsers();
+  const userIndex = users.findIndex((u) => u.id === id);
+
+  if (userIndex === -1) return res.status(404).send("User not found");
+
+  users[userIndex] = { ...users[userIndex], ...updateData };
+  await saveUsers(users);
+
+  res.status(200).json({
+    message: "User updated successfully",
+    user: users[userIndex],
+  });
+});
+
+app.listen(3000);
