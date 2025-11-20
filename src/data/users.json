@@ -1,0 +1,9 @@
+[
+  { "username": "bat", "password": 1234, "id": 1, "balance": 20000 },
+  { "username": "bat", "password": 1234, "id": 2, "balance": 230000 },
+  { "username": "bat", "password": 1234, "id": 3, "balance": 150000 },
+  { "username": "bat", "password": 1234, "id": 4, "balance": 2400},
+  { "username": "Tumruu", "password": 1234, "id": 5, "balance": 1400000 },
+  { "username": "dorj", "password": 1234, "id": 6, "balance": 15000 },
+  { "username": "dorj", "password": 1234, "id": 7, "balance": 2500000 }
+]
