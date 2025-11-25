@@ -1,5 +1,7 @@
+import fs from "node:fs/promises";
 export class BankService {
   checkBalance() {
-    return "6000";
+    const user = fs.readFile("src/data/users.json", "utf-8");
+    return user;
   }
 }

@@ -1,28 +1,43 @@
 import express from "express";
-import { bankRouter } from "./routers/bank.js";
-import { userRouter } from "./routers/user.js";
-import cors from "cors";
 import cookieParser from "cookie-parser";
-import path from "path";
+import { userRouters } from "./routers/user.js";
+import { bankRouters } from "./routers/bank.js";
+import cors from "cors";
 
 const app = express();
 
 app.use(cors());
-
-app.use(express.json()); 
-
+app.use(express.json());
 app.use(cookieParser());
 
 app.use("/", (req, res, next) => {
-  const user = req.cookies.user;
-  req.user = user;
+  const userId = req.cookies.user;
+
+  if (userId && req.path === "/login.html") {
+    return res.redirect("/bank.html");
+  }
+
+  if (!userId && req.path === "/bank.html") {
+    return res.redirect("/login.html");
+  }
+
+  if (userId) {
+    const user = {
+      username: "username",
+      password: "password"
+    };
+
+    req.user = user;
+  }
+
+  next();
 });
 
-app.use(express.static)
+app.use(express.static("frontend"));
 
-app.use("/bank", bankRouter);
-app.use("/user", userRouter);
+app.use("/user", userRouters);
+app.use("/bank", bankRouters);
 
 app.listen(3000, () => {
-  console.log("3000");
+  console.log("express app running at 3000");
 });

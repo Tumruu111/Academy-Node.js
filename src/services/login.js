@@ -1,4 +1,3 @@
-import login from "../Academy-Node.js/src/controllers/user.js"
 const addBtn = document.getElementById("submit");
 
 const addBtnFunc = async () => {
@@ -16,4 +15,4 @@ const addBtnFunc = async () => {
             body: JSON.stringify({ username, password }),
           });
 };
-addBtn.addEventListener("click", addBtnFunc, login);
+addBtn.addEventListener("click", addBtnFunc);

@@ -1,19 +1,15 @@
-import users from "../data/users.json" with {type: "json"};
 export const login = (req, res) => {
-  const username = req.body.username
-  const password =req.body.password
-  const user = users.find(value => {
-    return value.username === username && value.password === password;
-  });
-    res.send("success");
-   if (!user) {
-    console.log("username eswel password buruu bn!");
-   }
-
-   res.cookie("user", user.username, {
+  res.cookie(req.username, req.password, {
     httpOnly: true,
-    secure: false,
-    sameSite: "None",
-    maxAge: 24 * 60 * 60 * 1000
-   });
+    secure: false
+  });
+  res.json({
+    user: req.username
+  });
+};
+
+export const logout = (req, res) => {
+  res.clearCookie("user");
+
+  res.send("Success!");
 };
