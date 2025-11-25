@@ -1,15 +1,14 @@
 export const login = (req, res) => {
-  res.cookie(req.username, req.password, {
+  const username = req.body.username;
+  const password = req.body.password
+  res.cookie("user", username, {
     httpOnly: true,
     secure: false
   });
   res.json({
-    user: req.username
   });
 };
-
 export const logout = (req, res) => {
   res.clearCookie("user");
-
   res.send("Success!");
 };
