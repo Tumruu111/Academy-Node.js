@@ -22,12 +22,7 @@ app.use("/", (req, res, next) => {
   }
 
   if (userId) {
-    const user = {
-      username: "username",
-      password: "password"
-    };
-
-    req.user = user;
+    req.userId = userId;
   }
 
   next();

@@ -1,7 +1,7 @@
 import { BankService } from "../services/bank.js";
 
-export const checkBalanceController = async (req, res) => {
-  const { userId } = req.params;
+export const loadBalance = async (req, res) => {
+  const userId = req.userId;
 
   try {
     const aa = new BankService();
