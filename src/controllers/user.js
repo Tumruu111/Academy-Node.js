@@ -1,11 +1,8 @@
-import fs from "node:fs/promises";
-import path from "path";
-export const login = async (req, res) => {
-  const filePath = path.join("../../data/users.json");
-  const username = req.body.username;
-  const password = req.body.password;
-  const userData = await fs.readFile(filePath, "utf-8");
-  if ((userData.username === username, userData.password === password)) {
+import fs from "fs";
+export const login = (req, res) => {
+  const { username, password } = req.body;
+  const userData = JSON.parse(fs.readFileSync("data/users.json"));
+  if (userData.username === username && userData.password === password) {
     console.log("amjilttai!");
   }
 

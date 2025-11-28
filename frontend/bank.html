@@ -8,15 +8,16 @@
   <body>
     <h1>Bank</h1>
     <div>
-      <h2>Your Balance: <span id="balance"></span></h2>
+      <h2>Your Balance<span id="balance"></span></h2>
     </div>
     <button onclick="logout()">Logout</button>
     <button onclick="deposit()">Deposit</button>
     <input type="number" id="depositAmount" placeholder="Enter amount" />
     <button onclick="withdraw()">Withdraw</button>
     <input type="number" id="withdrawAmount" placeholder="Enter amount" />
+    <button onclick="history()">History</button>
     <script>
-      const balanceEl = document.getElementById("balance");
+      const userBalance = document.getElementById("balance");
       const loadBalance = async () => {
         const response = await fetch("http://localhost:3000/bank/balance", {
           method: "POST",
