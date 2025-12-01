@@ -21,10 +21,12 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username, password }),
         });
+
         if (response.ok) {
           window.location.href = "/bank.html";
         } else {
-          return window.alert("Ner esvel nuuts ug buruu baina!");
+          document.getElementById("errorMsg").textContent =
+            "Invalid username or password";
         }
       };
     </script>
