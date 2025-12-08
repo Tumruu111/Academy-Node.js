@@ -1,20 +1,61 @@
-import fs from "fs";
-export const login = (req, res) => {
-  const { username, password } = req.body;
-  const userData = JSON.parse(fs.readFileSync("data/users.json"));
-  if (userData.username === username && userData.password === password) {
-    console.log("amjilttai!");
-  }
+import {
+  createUserService,
+  updateUserService,
+  getUsersService,
+  getUserByIdService,
+  deleteUserService,
+  getUserAccountsService,
+  getUserTransactionsService,
+} from "../services/user.js";
 
-  res.cookie("user", JSON.stringify({ username }), {
-    httpOnly: true,
-    secure: false,
-  });
+export const createUser = async (req, res) => {
+  const { username, email, password, firstname, lastname } = req.body;
 
-  res.json({ message: "Logged in", user: { username } });
+  const user = await createUserService(
+    username,
+    email,
+    password,
+    firstname,
+    lastname
+  );
+
+  res.json(user);
 };
 
-export const logout = (req, res) => {
-  res.clearCookie("user");
-  res.send("Success!");
+export const updateUser = async (req, res) => {
+  const { id, username, email, password, firstname, lastname } = req.body;
+
+  const user = await updateUserService(
+    id,
+    username,
+    email,
+    password,
+    firstname,
+    lastname
+  );
+
+  res.json(user);
+};
+
+export const getUsers = async (req, res) => {
+  const users = await getUsersService();
+  res.json(users);
+};
+
+export const getUserById = async (req, res) => {
+  const { id } = req.query;
+  const user = await getUserByIdService(id);
+  res.json(user);
+};
+
+export const deleteUser = async (req, res) => {
+  const { id } = req.query;
+  const user = await deleteUserService(id);
+  res.json(user);
+};
+
+export const getUserAccounts = async (req, res) => {
+  const { id } = req.query;
+  const accounts = await getUserAccountsService(id);
+  res.json(accounts);
 };
