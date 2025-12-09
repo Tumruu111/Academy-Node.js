@@ -1,3 +1,4 @@
+import { text } from "express";
 import { db } from "../db.js";
 
 export const createAccountService = async (userid, number, balance) => {
@@ -32,7 +33,8 @@ export const getAllAccountsServices = async (userid) => {
 };
 export const getAccountByNumberServices = async (number) => {
   const response = await db.query(
-    `SELECT * FROM account WHERE number = ${number}`
+    `SELECT * FROM account WHERE number = $1::text`,
+    [number]
   );
   return response.rows[0];
 };
