@@ -1,10 +1,6 @@
-import { Router, Request, Response } from "express";
-import { Movies } from "./models";
+import { Router } from "express";
+import { putMovieService } from "./controllers";
 
 export const movieRouter = Router();
 
-movieRouter.get("/movies", async (req: Request, res: Response) => {
-  const movie = await Movies.find({ rated: "PG-13" }).limit(10);
-
-  res.send(movie);
-});
+movieRouter.post("/putMovies", putMovieService);
