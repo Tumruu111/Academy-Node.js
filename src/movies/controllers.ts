@@ -25,3 +25,6 @@ export const putMovieService = async (req: Request, res: Response) => {
   });
   res.send(movie);
 };
+export const updateIMBd = async (req: Request, res: Response) => {
+  const update = await Movies.updateOne({});
+};
