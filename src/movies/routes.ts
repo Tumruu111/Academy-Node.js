@@ -4,3 +4,4 @@ import { putMovieService } from "./controllers";
 export const movieRouter = Router();
 
 movieRouter.post("/putMovies", putMovieService);
+movieRouter.put("/updateIMBD");
