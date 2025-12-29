@@ -18,7 +18,7 @@ export interface IMoviesDocument extends Document {
   title: string;
   year: number;
   plot: string;
-  genre: string[];
+  genres: string[];
   runtime: number;
   cast: string[];
   poster: string;
@@ -30,6 +30,10 @@ export interface IMoviesDocument extends Document {
     wins: number;
     nominations: number;
     text: string;
+  };
+  imdb: {
+    rating: number;
+    votes: number;
   };
   tomatoes: ITomatoes;
 }
@@ -54,7 +58,7 @@ const TomatoesSchema: Schema<ITomatoes> = new Schema(
 
 const MovieSchema: Schema<IMoviesDocument> = new Schema({
   plot: { type: String, required: true },
-  genre: { type: [String], required: true },
+  genres: { type: [String], required: true },
   title: { type: String, required: true },
   year: { type: Number, required: true },
   runtime: { type: Number, required: true },
@@ -68,6 +72,10 @@ const MovieSchema: Schema<IMoviesDocument> = new Schema({
     wins: { type: Number },
     nominations: { type: Number },
     text: { type: String },
+  },
+  imdb: {
+    rating: { type: Number },
+    votes: { type: Number },
   },
   tomatoes: TomatoesSchema,
 });
