@@ -1,12 +1,7 @@
-import express from "express";
+import { ApolloServer } from "@apollo/server";
+import { startStandaloneServer } from "@apollo/server/standalone";
 import mongoose from "mongoose";
-import bodyParser from "body-parser";
-import { movieRouter } from "./movies/routes";
-
-const app = express();
-app.use(bodyParser.json());
-
-app.use("/movie", movieRouter);
+import { typeDefs, resolvers } from "./apolloServer.ts";
 
 mongoose
   .connect(
@@ -19,4 +14,26 @@ mongoose
     console.error("MongoDB connection error:", err);
   });
 
-app.listen(3001, () => console.log("Server running on port 3000"));
+export interface IContext {
+  user: {
+    firstname: string;
+  };
+}
+
+const server = new ApolloServer<IContext>({
+  typeDefs,
+  resolvers,
+});
+
+const { url } = await startStandaloneServer(server, {
+  listen: { port: 4000 },
+  context: async ({ req, res }) => {
+    return {
+      user: {
+        firstname: "bat",
+      },
+    };
+  },
+});
+
+console.log(`🚀  Server ready at: ${url}`);
