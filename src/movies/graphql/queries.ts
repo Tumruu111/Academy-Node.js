@@ -22,15 +22,4 @@ export const movieQueries = {
     return movies;
   },
 };
-export const userQueries = {
-  login: async (
-    _root: any,
-    { email, password }: { email: string; password: string }
-  ) => {
-    const user = await Users.findOne({ email, password });
-    if (email && password) {
-      return "Login successful";
-    }
-    return "Invalid username or password";
-  },
-};
+export const userQueries = {};

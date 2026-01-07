@@ -31,7 +31,7 @@ const MovieSchema: Schema<IMoviesDocument> = new Schema({
   runtime: { type: Number, required: true },
   cast: { type: [String], required: true },
   poster: { type: String, required: true },
-  fullpolt: { type: String, required: true },
+  fullplot: { type: String, required: true },
   relased: { type: Date, required: true, default: new Date() },
   languages: { type: [String], required: true },
   directors: { type: [String], required: true },

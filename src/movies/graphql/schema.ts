@@ -20,7 +20,8 @@ export const movieTypeDefs = `
 
   input MovieInput {
     title: String
-    author: String
+    directors: String
+    year: Int
   }
   
   input loginInput {
@@ -43,9 +44,9 @@ export const movieQueryTypeDefs = `
 export const movieMutationTypeDefs = `
  addMovie(input: MovieInput): String
 `;
-export const userQueryTypeDefs = `
-  login(input: loginInput): String
-`;
+export const userQueryTypeDefs = ``;
 export const userMutationTypedefs = `
   signup(input: signupInput): User
+  login(input: loginInput): String
+  userAddMovie(input: MovieInput): String
 `;

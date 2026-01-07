@@ -2,6 +2,7 @@ import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import mongoose from "mongoose";
 import { typeDefs, resolvers } from "./apolloServer.ts";
+import jwt from "jsonwebtoken";
 
 mongoose
   .connect(
@@ -35,5 +36,35 @@ const { url } = await startStandaloneServer(server, {
     };
   },
 });
+
+// const { url } = await startStandaloneServer(server, {
+//   listen: { port: 4000 },
+//   context: async ({ req, res }) => {
+//     const authHeader = req.headers.authorization;
+
+//     if (!authHeader) {
+//       return "authorization alga";
+//     }
+//     const token = authHeader.split(" ")[1]; // Bearer <token>
+
+//     if (!token) {
+//       return "token aaa";
+//     }
+//     const SECRET_KEY = process.env.JWT_SECRET || "secret";
+
+//     jwt.verify(token, SECRET_KEY, (err, decoded) => {
+//       if (err) return "Invalid token";
+
+//       console.log(decoded, "decoded");
+//       // req.user = decoded;
+//       return {
+//         token,
+//         user: {
+//           firstname: "bat",
+//         },
+//       };
+//     });
+//   },
+// });
 
 console.log(`🚀  Server ready at: ${url}`);
