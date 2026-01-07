@@ -1,5 +1,6 @@
 import { Movies, Users } from "../db/models.ts";
 import { type IContext } from "../../index.ts";
+import bcrypt from "bcrypt";
 
 export const movieQueries = {
   movies: async (
@@ -22,4 +23,15 @@ export const movieQueries = {
     return movies;
   },
 };
-export const userQueries = {};
+export const userQueries = {
+  login: async (
+    _root: any,
+    { email, password }: { email: string; password: string }
+  ) => {
+    const user = await Users.findOne({ email, password });
+    if (!user) {
+      return "Invalid username or password";
+    }
+    return "Invalid username or password";
+  },
+};
