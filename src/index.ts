@@ -1,8 +1,9 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-import mongoose from "mongoose";
+import mongoose, { model } from "mongoose";
 import { typeDefs, resolvers } from "./apolloServer.ts";
 import jwt from "jsonwebtoken";
+import { Users } from "./movies/db/models.ts";
 
 const SECRET_KEY = process.env.JWT_SECRET || "secret";
 
@@ -18,8 +19,9 @@ mongoose
   });
 
 export interface IContext {
-  user: {
-    firstname: string;
+  user?: {
+    name: String;
+    id: String;
   };
 }
 
@@ -27,34 +29,29 @@ const server = new ApolloServer<IContext>({
   typeDefs,
   resolvers,
 });
-const { url } = await startStandaloneServer(server, {
+const { url } = await startStandaloneServer<IContext>(server, {
   listen: { port: 4000 },
-  context: async ({ req, res }) => {
+  context: async ({ req }) => {
     const authHeader = req.headers.authorization;
 
-    if (!authHeader) {
-      return "authorization alga";
-    }
-    const token = authHeader.split(" ")[1]; // Bearer <token>
+    if (!authHeader) return {};
 
-    if (!token) {
-      return "token aaa";
-    }
-    const SECRET_KEY = process.env.JWT_SECRET || "secret";
+    try {
+      const decoded = jwt.verify(authHeader, SECRET_KEY) as { email: string };
 
-    jwt.verify(token, SECRET_KEY, (err, decoded) => {
-      if (err) return "Invalid token";
+      const userData = await Users.findOne({ email: decoded.email });
 
-      console.log(decoded, "decoded");
-      // req.user = decoded;
+      if (!userData) return {};
+
       return {
-        token,
         user: {
-          firstname: "bat",
+          name: userData.name,
+          id: userData._id.toString(),
         },
       };
-    });
+    } catch (err) {
+      throw new Error("Invalid or expired token");
+    }
   },
 });
-
 console.log(`🚀  Server ready at: ${url}`);

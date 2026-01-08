@@ -10,7 +10,7 @@ export const movieTypeDefs = `
     title: String
     author: String
     awards: [Award]
-   
+    comments: String
   }
   type User {
     name: String
@@ -26,6 +26,7 @@ export const movieTypeDefs = `
     poster: String
     runtime: Int
     plot: String
+    userId: String
   }
   
   input loginInput {
@@ -40,6 +41,10 @@ export const movieTypeDefs = `
   }
   input deleteMovieInput {
   title: String
+  }
+  input userCommentInput{
+  title: String
+  comment: String
   }
 
 `;
@@ -58,4 +63,5 @@ export const userMutationTypedefs = `
   login(input: loginInput): String
   userAddMovie(input: MovieInput): String
   userDeleteMovie(input: deleteMovieInput): String
+  userComment(input: userCommentInput): String
 `;

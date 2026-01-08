@@ -28,20 +28,20 @@ export const userMutations = {
     const { email, password } = input;
     const user = await Users.findOne({ email });
     if (!user) {
-      return "invalid email or password";
+      return "email not found";
     }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return "invalid email or password";
+      return "invalid  password";
     }
     const token = jwt.sign(
       {
-        name: user.name,
+        email: user.email,
       },
       SECRET_KEY,
-      { expiresIn: "1h" }
+      { expiresIn: "2h" }
     );
-    return "Login successful";
+    return token;
   },
   userAddMovie: async (
     _root: any,
@@ -60,27 +60,45 @@ export const userMutations = {
       plot,
       runtime,
       poster,
+      userId: user.id,
     });
     return "Movie added successfully";
   },
   userDeleteMovie: async (
     _root: any,
-    { title }: { title: string },
+    { input }: { input: { title: string } },
     { user }: IContext
   ) => {
+    const { title } = input;
     if (!user) {
       throw new Error("Authentication required");
     }
-
-    // 🗑️ Delete movie by title
     const result = await Movies.findOneAndDelete({
       title: title,
     });
-
     if (!result) {
       throw new Error("Movie not found");
     }
-
     return "Movie deleted successfully";
+  },
+  userComment: async (
+    _root: any,
+    { input }: { input: { comments: string; title: string } },
+    { user }: IContext
+  ) => {
+    if (!user) {
+      throw new Error("token required!");
+    }
+    const { title, comments } = input;
+    const userMovie = Movies.findOne({ title });
+    if (!title) {
+      return "Movie not found!";
+    }
+    const userComment = Movies.updateOne(
+      { title: title },
+      { $push: { comments: { comments } } }
+    );
+    console.log(userComment);
+    return "Added comment";
   },
 };

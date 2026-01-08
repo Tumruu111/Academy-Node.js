@@ -3,7 +3,7 @@ import {
   type ITomatoesDocument,
   type IMoviesDocument,
 } from "../types/movies.ts";
-import { type IUsersDocument } from "../types/users.ts";
+import { type ICommentDocument, type IUsersDocument } from "../types/users.ts";
 
 const TomatoesSchema: Schema<ITomatoesDocument> = new Schema(
   {
@@ -35,6 +35,7 @@ const MovieSchema: Schema<IMoviesDocument> = new Schema({
   relased: { type: Date, required: true, default: new Date() },
   languages: { type: [String], required: true },
   directors: { type: [String], required: true },
+  comments: { type: [String] },
   awards: [
     {
       wins: { type: Number },
@@ -48,9 +49,17 @@ const MovieSchema: Schema<IMoviesDocument> = new Schema({
 export const Movies = model<IMoviesDocument>("movies", MovieSchema);
 
 const UserSchema: Schema<IUsersDocument> = new Schema({
-  name: { type: String },
+  name: { type: String, required: true },
   email: { type: String, required: true },
   password: { type: String, required: true },
 });
 
 export const Users = model<IUsersDocument>("users", UserSchema);
+const CommentSchema: Schema<ICommentDocument> = new Schema({
+  name: { type: String },
+  email: { type: String, required: true },
+  movie_id: { type: String, required: true },
+  text: { type: String, required: true },
+  date: { type: Date },
+});
+export const Comments = model<ICommentDocument>("comments", CommentSchema);

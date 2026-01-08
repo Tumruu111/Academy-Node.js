@@ -28,14 +28,15 @@ export interface IMovie {
   relased: Date;
   languages: string[];
   directors: string[];
+  userId: String;
+  comments: string[];
   awards: {
     wins: number;
     nominations: number;
     text: string;
   };
+
   tomatoes: ITomateos;
 }
 
-export interface IMoviesDocument extends IMovie, Document {
-  title: string;
-}
+export interface IMoviesDocument extends IMovie, Document {}
