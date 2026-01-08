@@ -10,7 +10,7 @@ const SECRET_KEY = process.env.JWT_SECRET || "secret";
 export const movieMutations = {
   addMovie: async (_root: any, { input }: { input: IMovie }) => {
     const movie = await Movies.insertOne({});
-    return "Success";
+    return movie;
   },
 };
 export const userMutations = {
@@ -30,9 +30,9 @@ export const userMutations = {
     if (!user) {
       return "invalid email or password";
     }
-    const isMatch = await bcrypt.compare(input.password, user.password);
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return "invalid username or password";
+      return "invalid email or password";
     }
     const token = jwt.sign(
       {
@@ -41,7 +41,7 @@ export const userMutations = {
       SECRET_KEY,
       { expiresIn: "1h" }
     );
-    return token;
+    return "Login successful";
   },
   userAddMovie: async (
     _root: any,
@@ -49,16 +49,38 @@ export const userMutations = {
     { user }: IContext
   ) => {
     if (!user) {
-      return "token missing";
+      return "Token is missing!";
     }
-
-    const { title, directors, year } = input;
-
+    const { title, directors, year, poster, fullplot, plot, runtime } = input;
     const movie = await Movies.insertOne({
       title,
       directors,
       year,
+      fullplot,
+      plot,
+      runtime,
+      poster,
     });
-    return movie;
+    return "Movie added successfully";
+  },
+  userDeleteMovie: async (
+    _root: any,
+    { title }: { title: string },
+    { user }: IContext
+  ) => {
+    if (!user) {
+      throw new Error("Authentication required");
+    }
+
+    // 🗑️ Delete movie by title
+    const result = await Movies.findOneAndDelete({
+      title: title,
+    });
+
+    if (!result) {
+      throw new Error("Movie not found");
+    }
+
+    return "Movie deleted successfully";
   },
 };

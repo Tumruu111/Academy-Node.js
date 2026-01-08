@@ -22,11 +22,15 @@ export const movieTypeDefs = `
     title: String
     directors: String
     year: Int
+    fullplot: String
+    poster: String
+    runtime: Int
+    plot: String
   }
   
   input loginInput {
-  email: String 
-  password: String
+    email: String 
+    password: String
   }
   
   input signupInput {
@@ -34,6 +38,10 @@ export const movieTypeDefs = `
   email: String
   password: String
   }
+  input deleteMovieInput {
+  title: String
+  }
+
 `;
 
 export const movieQueryTypeDefs = `
@@ -49,4 +57,5 @@ export const userMutationTypedefs = `
   signup(input: signupInput): User
   login(input: loginInput): String
   userAddMovie(input: MovieInput): String
+  userDeleteMovie(input: deleteMovieInput): String
 `;
