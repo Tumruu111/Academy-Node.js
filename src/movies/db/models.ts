@@ -56,10 +56,10 @@ const UserSchema: Schema<IUsersDocument> = new Schema({
 
 export const Users = model<IUsersDocument>("users", UserSchema);
 const CommentSchema: Schema<ICommentDocument> = new Schema({
-  name: { type: String },
+  name: { type: String, required: true },
   email: { type: String, required: true },
   movie_id: { type: String, required: true },
   text: { type: String, required: true },
-  date: { type: Date },
+  date: { type: Date, required: true },
 });
 export const Comments = model<ICommentDocument>("comments", CommentSchema);

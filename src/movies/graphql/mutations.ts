@@ -1,7 +1,7 @@
 import { type IContext } from "../../index.ts";
-import { Movies, Users } from "../db/models.ts";
+import { Comments, Movies, Users } from "../db/models.ts";
 import { type IMovie } from "../types/movies.ts";
-import { type IUser } from "../types/users.ts";
+import { type IUser, type IComment } from "../types/users.ts";
 import * as bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -81,24 +81,16 @@ export const userMutations = {
     }
     return "Movie deleted successfully";
   },
-  userComment: async (
-    _root: any,
-    { input }: { input: { comments: string; title: string } },
-    { user }: IContext
-  ) => {
-    if (!user) {
-      throw new Error("token required!");
-    }
-    const { title, comments } = input;
-    const userMovie = Movies.findOne({ title });
-    if (!title) {
-      return "Movie not found!";
-    }
-    const userComment = Movies.updateOne(
-      { title: title },
-      { $push: { comments: { comments } } }
-    );
-    console.log(userComment);
+};
+export const commentMutations = {
+  addComment: async (_root: any, { input }: { input: IComment }) => {
+    await Comments.create({
+      name: input.name,
+      email: input.email,
+      movie_id: input.movie_id,
+      text: input.text,
+      date: new Date(),
+    });
     return "Added comment";
   },
 };

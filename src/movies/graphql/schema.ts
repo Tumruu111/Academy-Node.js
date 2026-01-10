@@ -42,10 +42,14 @@ export const movieTypeDefs = `
   input deleteMovieInput {
   title: String
   }
-  input userCommentInput{
-  title: String
-  comment: String
-  }
+  input AddCommentInput {
+  name: String
+  email: String
+  movie_id: String
+  text: String
+  date: Int
+}
+
 
 `;
 
@@ -63,5 +67,9 @@ export const userMutationTypedefs = `
   login(input: loginInput): String
   userAddMovie(input: MovieInput): String
   userDeleteMovie(input: deleteMovieInput): String
-  userComment(input: userCommentInput): String
+`;
+export const commentQueryTypeDefs = `
+`;
+export const commentMutationTypeDefs = `
+  addComment(input: AddCommentInput): String
 `;
