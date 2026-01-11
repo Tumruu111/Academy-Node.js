@@ -71,13 +71,13 @@ export const userMutations = {
   ) => {
     const { title } = input;
     if (!user) {
-      throw new Error("Authentication required");
+      return "Authentication required";
     }
     const result = await Movies.findOneAndDelete({
       title: title,
     });
     if (!result) {
-      throw new Error("Movie not found");
+      return "Movie not found";
     }
     return "Movie deleted successfully";
   },
@@ -92,5 +92,16 @@ export const commentMutations = {
       date: new Date(),
     });
     return "Added comment";
+  },
+  removeComment: async (
+    _root: any,
+    { input }: { input: { comments: string } },
+    { user }: IContext
+  ) => {
+    const { comments } = input;
+    if (!user) {
+      return "Token required!";
+    }
+    const deletedComment = await Comments.findOneAndDelete({});
   },
 };
