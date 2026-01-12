@@ -49,27 +49,39 @@ export const movieTypeDefs = `
   text: String
   date: Int
 }
+  input RemoveCommentInput {
+  movie_id: String
+  }
 
 
 `;
 
 export const movieQueryTypeDefs = `
-  movie(_id: ID): Movie
-  movies(title:String,page: Int!): [Movie]
+  extend type Query {
+    movie(_id: ID): Movie
+    movies(title: String, page: Int!): [Movie]
+  }
 `;
 
 export const movieMutationTypeDefs = `
- addMovie(input: MovieInput): String
+  extend type Mutation {
+    addMovie(input: MovieInput): String
+  }
 `;
-export const userQueryTypeDefs = ``;
+
 export const userMutationTypedefs = `
-  signup(input: signupInput): User
-  login(input: loginInput): String
-  userAddMovie(input: MovieInput): String
-  userDeleteMovie(input: deleteMovieInput): String
+  extend type Mutation {
+    signup(input: signupInput): User
+    login(input: loginInput): String
+    userAddMovie(input: MovieInput): String
+    userDeleteMovie(input: deleteMovieInput): String
+  }
 `;
-export const commentQueryTypeDefs = `
-`;
+
 export const commentMutationTypeDefs = `
-  addComment(input: AddCommentInput): String
+ extend type Mutation {
+ addComment(input: AddCommentInput): String
+  removeComment(input: RemoveCommentInput): String
+}
+ 
 `;

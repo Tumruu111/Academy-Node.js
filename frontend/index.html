@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Movies</title>
+  </head>
+  <body>
+    <h2>Login</h2>
+    <input id="email" placeholder="Email" />
+    <input id="password" type="password" placeholder="Password" />
+    <button id="loginBtn">Login</button>
+    <button id="signupBtn">Signup</button>
+
+    <p id="message"></p>
+
+    <script>
+      const endpoint = "http://localhost:4000/graphql";
+      const loginBtn = document.getElementById("loginBtn");
+      const message = document.getElementById("message");
+
+      loginBtn.addEventListener("click", async () => {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        const mutation = `
+         mutation Mutation($input: loginInput) {
+          login(input: $input)
+          }
+        `;
+        try {
+          const response = await fetch(endpoint, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              query: mutation,
+              variables: { input: { email, password } },
+            }),
+          });
+          const result = await response.json();
+          console.log(result);
+          if (!result) {
+            message.textContent = `Login unsuccessful`;
+          } else {
+            message.textContent = "Logged in";
+          }
+        } catch (error) {
+          message.textContent = "Error connecting to server";
+        }
+      });
+      signupBtn.addEventListener("click", async () => {
+        window.location.href = "signup.html";
+      });
+    </script>
+  </body>
+</html>

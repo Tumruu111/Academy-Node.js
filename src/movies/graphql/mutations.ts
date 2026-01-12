@@ -95,13 +95,13 @@ export const commentMutations = {
   },
   removeComment: async (
     _root: any,
-    { input }: { input: { comments: string } },
+    { input }: { input: { movie_id: string } },
     { user }: IContext
   ) => {
-    const { comments } = input;
+    const { movie_id } = input;
     if (!user) {
       return "Token required!";
     }
-    const deletedComment = await Comments.findOneAndDelete({});
+    const result = await Comments.findOneAndDelete({});
   },
 };

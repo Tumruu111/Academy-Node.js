@@ -1,6 +1,6 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-import mongoose, { model } from "mongoose";
+import mongoose from "mongoose";
 import { typeDefs, resolvers } from "./apolloServer.ts";
 import jwt from "jsonwebtoken";
 import { Users } from "./movies/db/models.ts";
@@ -28,30 +28,28 @@ export interface IContext {
 const server = new ApolloServer<IContext>({
   typeDefs,
   resolvers,
+  introspection: true,
 });
 const { url } = await startStandaloneServer<IContext>(server, {
   listen: { port: 4000 },
   context: async ({ req }) => {
-    const authHeader = req.headers.authorization;
+    const authHeader = req.headers.authorization || "";
 
-    if (!authHeader) return {};
+    let context: any = {};
 
     try {
-      const decoded = jwt.verify(authHeader, SECRET_KEY) as { email: string };
+      const decoded: any = jwt.verify(authHeader, SECRET_KEY);
 
       const userData = await Users.findOne({ email: decoded.email });
 
-      if (!userData) return {};
-
-      return {
-        user: {
-          name: userData.name,
-          id: userData._id.toString(),
-        },
-      };
-    } catch (err) {
-      throw new Error("Invalid or expired token");
+      if (userData) {
+        context.user = userData;
+      }
+    } catch (error) {
+      return context;
     }
+
+    return context;
   },
 });
 console.log(`🚀  Server ready at: ${url}`);

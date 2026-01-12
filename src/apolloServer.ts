@@ -2,9 +2,7 @@ import {
   movieTypeDefs,
   movieQueryTypeDefs,
   movieMutationTypeDefs,
-  userQueryTypeDefs,
   userMutationTypedefs,
-  commentQueryTypeDefs,
   commentMutationTypeDefs,
 } from "./movies/graphql/schema.ts";
 import { movieQueries } from "./movies/graphql/queries.ts";
@@ -13,21 +11,19 @@ import {
   userMutations,
   commentMutations,
 } from "./movies/graphql/mutations.ts";
+import { gql } from "graphql-tag";
 
-export const typeDefs = `
+export const typeDefs = gql`
   ${movieTypeDefs}
 
-  type Query {
-    ${movieQueryTypeDefs}
-    ${userQueryTypeDefs}
-    ${commentQueryTypeDefs}
-  }
+  type Query
+  type Mutation
 
-  type Mutation {
-    ${movieMutationTypeDefs}
-    ${userMutationTypedefs}
-    ${commentMutationTypeDefs}
-  }
+  ${movieQueryTypeDefs}
+
+  ${movieMutationTypeDefs}
+  ${userMutationTypedefs}
+  ${commentMutationTypeDefs}
 `;
 
 export const resolvers = {
