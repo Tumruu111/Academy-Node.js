@@ -1,36 +1,32 @@
 import {
-  movieTypeDefs,
-  movieQueryTypeDefs,
-  movieMutationTypeDefs,
+  pollTypeDefs,
   userMutationTypedefs,
-  commentMutationTypeDefs,
-} from "./movies/graphql/schema.ts";
-import { movieQueries } from "./movies/graphql/queries.ts";
+} from "./votingSystem/graphql/schema.ts";
 import {
-  movieMutations,
   userMutations,
-  commentMutations,
-} from "./movies/graphql/mutations.ts";
+  voteMutations,
+} from "./votingSystem/graphql/mutations.ts";
 import { gql } from "graphql-tag";
 
 export const typeDefs = gql`
-  ${movieTypeDefs}
+  ${pollTypeDefs}
 
-  type Query
-  type Mutation
+ type Query {
+    user: String
+ }
 
-  ${movieQueryTypeDefs}
-
-  ${movieMutationTypeDefs}
-  ${userMutationTypedefs}
-  ${commentMutationTypeDefs}
+  type Mutation {
+    ${userMutationTypedefs}
+  }
 `;
 
 export const resolvers = {
-  Query: { ...movieQueries },
   Mutation: {
-    ...movieMutations,
     ...userMutations,
-    ...commentMutations,
+  },
+  Query: {
+    user: async () => {
+      return "user";
+    },
   },
 };

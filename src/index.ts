@@ -3,13 +3,13 @@ import { startStandaloneServer } from "@apollo/server/standalone";
 import mongoose from "mongoose";
 import { typeDefs, resolvers } from "./apolloServer.ts";
 import jwt from "jsonwebtoken";
-import { Users } from "./movies/db/models.ts";
+import { User } from "./votingSystem/db/models.ts";
 
 const SECRET_KEY = process.env.JWT_SECRET || "secret";
 
 mongoose
   .connect(
-    "mongodb+srv://tumruu1999_db_user:lB9ey0anCeEPUjWE@cluster0.pk5bjjn.mongodb.net/sample_mflix"
+    "mongodb+srv://tumruu1999_db_user:PEyXWQSACCdI8uB9@votingsystem.cfwkemc.mongodb.net/VotingSystem"
   )
   .then(() => {
     console.log("MongoDB connected");
@@ -30,6 +30,7 @@ const server = new ApolloServer<IContext>({
   resolvers,
   introspection: true,
 });
+
 const { url } = await startStandaloneServer<IContext>(server, {
   listen: { port: 4000 },
   context: async ({ req }) => {
@@ -40,7 +41,7 @@ const { url } = await startStandaloneServer<IContext>(server, {
     try {
       const decoded: any = jwt.verify(authHeader, SECRET_KEY);
 
-      const userData = await Users.findOne({ email: decoded.email });
+      const userData = await User.findOne({ email: decoded.email });
 
       if (userData) {
         context.user = userData;
@@ -48,7 +49,6 @@ const { url } = await startStandaloneServer<IContext>(server, {
     } catch (error) {
       return context;
     }
-
     return context;
   },
 });
