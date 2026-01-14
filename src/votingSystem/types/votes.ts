@@ -1,7 +1,7 @@
 import { Types, Document } from "mongoose";
 
 export interface IVote {
-  vote: string;
+  answer: string;
   user_id: Types.ObjectId;
   poll_id: Types.ObjectId;
 }

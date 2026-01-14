@@ -19,7 +19,7 @@ mongoose
   });
 
 export interface IContext {
-  user?: {
+  user: {
     name: String;
     id: String;
   };
@@ -28,7 +28,6 @@ export interface IContext {
 const server = new ApolloServer<IContext>({
   typeDefs,
   resolvers,
-  introspection: true,
 });
 
 const { url } = await startStandaloneServer<IContext>(server, {
@@ -42,7 +41,6 @@ const { url } = await startStandaloneServer<IContext>(server, {
       const decoded: any = jwt.verify(authHeader, SECRET_KEY);
 
       const userData = await User.findOne({ email: decoded.email });
-
       if (userData) {
         context.user = userData;
       }

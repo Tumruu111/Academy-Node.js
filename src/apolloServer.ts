@@ -1,32 +1,39 @@
 import {
+  pollMutationTypeDefs,
+  pollQueriesTypeDefs,
   pollTypeDefs,
-  userMutationTypedefs,
+  userMutationTypeDefs,
+  voteMutationsTypeDefs,
 } from "./votingSystem/graphql/schema.ts";
 import {
   userMutations,
+  pollMutations,
   voteMutations,
 } from "./votingSystem/graphql/mutations.ts";
 import { gql } from "graphql-tag";
+import { pollQueries } from "./votingSystem/graphql/queries.ts";
 
 export const typeDefs = gql`
-  ${pollTypeDefs}
+    ${pollTypeDefs}
 
  type Query {
-    user: String
+    ${pollQueriesTypeDefs}
  }
 
   type Mutation {
-    ${userMutationTypedefs}
+    ${userMutationTypeDefs}
+    ${pollMutationTypeDefs}
+    ${voteMutationsTypeDefs}
   }
 `;
 
 export const resolvers = {
   Mutation: {
     ...userMutations,
+    ...pollMutations,
+    ...voteMutations,
   },
   Query: {
-    user: async () => {
-      return "user";
-    },
+    ...pollQueries,
   },
 };

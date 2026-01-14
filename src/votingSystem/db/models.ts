@@ -4,25 +4,28 @@ import { type IPollsDocument } from "../types/polls.ts";
 import { type IUsersDocument } from "../types/users.ts";
 
 const UserSchema = new Schema<IUsersDocument>({
-  name: { type: String, required: true },
+  name: { type: String, unique: true, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
 });
 
 export const User = model<IUsersDocument>("User", UserSchema);
 
-const PollSchema = new Schema<IPollsDocument>({
-  poll: { type: String, required: true },
-  options: {
-    type: [String],
-    required: true,
+const PollSchema = new Schema<IPollsDocument>(
+  {
+    poll: { type: String, required: true },
+    options: {
+      type: [String],
+      required: true,
+    },
   },
-});
+  { timestamps: true }
+);
 
 export const Poll = model<IPollsDocument>("Poll", PollSchema);
 
 const VoteSchema = new Schema<IVotesDocument>({
-  vote: { type: String, required: true },
+  answer: { type: String, required: true },
   user_id: {
     type: Schema.Types.ObjectId,
     ref: "User",

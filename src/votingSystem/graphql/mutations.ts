@@ -5,6 +5,7 @@ import { type IUser } from "../types/users.ts";
 import { type IPoll } from "../types/polls.ts";
 import * as bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { error } from "node:console";
 
 const SECRET_KEY = process.env.JWT_SECRET || "secret";
 
@@ -39,6 +40,43 @@ export const userMutations = {
     return token;
   },
 };
+export const pollMutations = {
+  createPoll: async (
+    _root: any,
+    { input }: { input: IPoll },
+    { user }: IContext
+  ) => {
+    if (!user) {
+      throw new Error("Token required");
+    }
+    try {
+      const userPoll = await Poll.create({
+        poll: input.poll,
+        options: input.options,
+      });
+      console.log("Created poll:", userPoll);
+      return userPoll;
+    } catch (error) {
+      console.error("Error creating poll:", error);
+      throw new Error("Failed to create poll");
+    }
+  },
+};
 export const voteMutations = {
-  addVote: async (_root: any) => {},
+  userVote: async (
+    _root: any,
+    { input }: { input: IVote },
+    { user }: IContext
+  ) => {
+    if (!user) {
+      throw new Error("Token required!");
+    }
+    const userVote = await Vote.insertOne({
+      answer: input.answer,
+      poll_id: input.poll_id,
+      user_id: input.user_id,
+    });
+    console.log("Voted!", userVote);
+    return userVote;
+  },
 };
