@@ -12,6 +12,14 @@ scalar Date
     name: String
     email: String 
     password: String
+    role: Int
+  }
+
+  type Admin {
+    name: String
+    email: String
+    password: String
+    role: Int
   }
 
   type Vote {
@@ -29,6 +37,7 @@ scalar Date
     name: String 
     email: String
     password: String
+    role: Int
   }
 
   input createPollInput {
@@ -41,11 +50,19 @@ scalar Date
     poll_id: String
     user_id: String
   }
+  
+  input adminLogin {
+    email: String
+    password: String  
+  }
+
 `;
 
 export const userMutationTypeDefs = `
     signup(input: signupInput): User
     login(input: loginInput): String
+    adminLogin(input: adminLogin): String
+
 `;
 
 export const pollMutationTypeDefs = `
@@ -55,5 +72,5 @@ export const voteMutationsTypeDefs = `
     userVote(input: voteInput): Vote
 `;
 export const pollQueriesTypeDefs = `
-    allPolls(user_id): Poll
+    allPolls: [Poll]
 `;

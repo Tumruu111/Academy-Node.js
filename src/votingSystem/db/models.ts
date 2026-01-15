@@ -7,6 +7,7 @@ const UserSchema = new Schema<IUsersDocument>({
   name: { type: String, unique: true, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  role: { type: Number, required: true },
 });
 
 export const User = model<IUsersDocument>("User", UserSchema);
