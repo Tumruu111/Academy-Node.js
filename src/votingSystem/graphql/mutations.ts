@@ -5,7 +5,6 @@ import { type IUser } from "../types/users.ts";
 import { type IPoll } from "../types/polls.ts";
 import * as bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { error } from "node:console";
 
 const SECRET_KEY = process.env.JWT_SECRET || "secret";
 
@@ -26,7 +25,7 @@ export const userMutations = {
       const token = jwt.sign(
         {
           email: user.email,
-          role: 0,
+          role: user.role,
         },
         SECRET_KEY,
         { expiresIn: "2h" }
@@ -64,6 +63,7 @@ export const userMutations = {
     const token = jwt.sign(
       {
         email: user.email,
+        role: user.role,
       },
       SECRET_KEY,
       { expiresIn: "2h" }
