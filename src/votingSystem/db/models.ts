@@ -20,7 +20,7 @@ const PollSchema = new Schema<IPollsDocument>(
       required: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export const Poll = model<IPollsDocument>("Poll", PollSchema);

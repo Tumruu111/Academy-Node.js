@@ -9,7 +9,7 @@ const SECRET_KEY = process.env.JWT_SECRET || "secret";
 
 mongoose
   .connect(
-    "mongodb+srv://tumruu1999_db_user:PEyXWQSACCdI8uB9@votingsystem.cfwkemc.mongodb.net/VotingSystem"
+    "mongodb+srv://tumruu1999_db_user:PEyXWQSACCdI8uB9@votingsystem.cfwkemc.mongodb.net/VotingSystem",
   )
   .then(() => {
     console.log("MongoDB connected");
@@ -40,7 +40,10 @@ const { url } = await startStandaloneServer<IContext>(server, {
     try {
       const decoded: any = jwt.verify(authHeader, SECRET_KEY);
 
-      const userData = await User.findOne({ email: decoded.email });
+      const userData = await User.findOne({
+        email: decoded.email,
+        role: decoded.role,
+      });
       if (userData) {
         context.user = userData;
       }

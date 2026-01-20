@@ -8,7 +8,7 @@
         <input id="name" placeholder="Name"/>
         <input id="email" placeholder="Email"/>
         <input id="password" type="password" placeholder="Password"/>
-        <input id= "role" type="number" placeholder="Role"/>
+        <input id= "role" placeholder="Role" type="number"/>
         <button id="signupBtn">Signup</button>
         <p id="message"></p>
         <script>
@@ -26,8 +26,8 @@
                 mutation Mutation($input: signupInput) {
                     signup(input: $input){
                     name
-                        }
-                    }
+                 }
+            }
                 `;
                     const response = await fetch(endpoint, {
                         method: "POST",
@@ -36,7 +36,7 @@
                     },
                  body: JSON.stringify({
                     query: mutation,
-                    variables: { input: { name, email, password, role } },
+                    variables: { input: { name, email, password, role: parseInt(role, 1) } },
                     }),
                  });
                  const result = await response.json();

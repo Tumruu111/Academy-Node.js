@@ -12,12 +12,10 @@ export const userMutations = {
   adminLogin: async (_root: any, { input }: { input: IUser }) => {
     const { email, password } = input;
     const user = await User.findOne({ email });
-    console.log(user);
     if (!user) {
       return "Not admin!";
     }
     const isMatch = await bcrypt.compare(password, user.password);
-    console.log(isMatch);
     if (!isMatch) {
       return "Invalid  password";
     }
@@ -28,7 +26,7 @@ export const userMutations = {
           role: user.role,
         },
         SECRET_KEY,
-        { expiresIn: "2h" }
+        { expiresIn: "2h" },
       );
       return token;
     } catch (error: any) {
@@ -66,7 +64,7 @@ export const userMutations = {
         role: user.role,
       },
       SECRET_KEY,
-      { expiresIn: "2h" }
+      { expiresIn: "2h" },
     );
     return token;
   },
@@ -75,7 +73,7 @@ export const pollMutations = {
   createPoll: async (
     _root: any,
     { input }: { input: IPoll },
-    { user }: IContext
+    { user }: IContext,
   ) => {
     if (!user) {
       throw new Error("Token required");
@@ -96,7 +94,7 @@ export const voteMutations = {
   userVote: async (
     _root: any,
     { input }: { input: IVote },
-    { user }: IContext
+    { user }: IContext,
   ) => {
     if (!user) {
       throw new Error("Token required!");
