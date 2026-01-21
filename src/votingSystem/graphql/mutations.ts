@@ -11,39 +11,30 @@ const SECRET_KEY = process.env.JWT_SECRET || "secret";
 export const userMutations = {
   adminLogin: async (_root: any, { input }: { input: IUser }) => {
     const { email, password } = input;
+
     const user = await User.findOne({ email });
     if (!user) {
-      return "Not admin!";
+      throw new Error("User not found");
     }
+    if (user.role !== 0) {
+      throw new Error("Not admin");
+    }
+
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return "Invalid  password";
+      throw new Error("Invalid password");
     }
-    try {
-      const token = jwt.sign(
-        {
-          email: user.email,
-          role: user.role,
-        },
-        SECRET_KEY,
-        { expiresIn: "2h" },
-      );
-      return token;
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
-  },
 
-  signup: async (_root: any, { input }: { input: IUser }) => {
-    const { email, name, password, role } = input;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.insertOne({
-      email,
-      name,
-      password: hashedPassword,
-      role,
-    });
-    return user;
+    const token = jwt.sign(
+      {
+        email: user.email,
+        role: user.role,
+      },
+      SECRET_KEY,
+      { expiresIn: "2h" },
+    );
+
+    return token;
   },
   login: async (_root: any, { input }: { input: IUser }) => {
     const { email, password } = input;
@@ -78,6 +69,8 @@ export const pollMutations = {
     if (!user) {
       throw new Error("Token required");
     }
+    if (user.role !== 0) {
+    }
     try {
       const userPoll = await Poll.create({
         poll: input.poll,
@@ -99,12 +92,19 @@ export const voteMutations = {
     if (!user) {
       throw new Error("Token required!");
     }
+    const vote = await Vote.findOne({
+      poll_id: input.poll_id,
+      user_id: input.user_id,
+    });
+    if (vote) {
+      throw new Error("Already voted");
+    }
     const userVote = await Vote.insertOne({
       answer: input.answer,
       poll_id: input.poll_id,
       user_id: input.user_id,
     });
-    console.log("Voted!", userVote);
+
     return userVote;
   },
 };

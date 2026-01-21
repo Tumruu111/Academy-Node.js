@@ -21,7 +21,7 @@ mongoose
 export interface IContext {
   user: {
     name: String;
-    id: String;
+    role: Number;
   };
 }
 

@@ -14,14 +14,7 @@ scalar Date
     password: String
     role: Int
   }
-
-  type Admin {
-    name: String
-    email: String
-    password: String
-    role: Int
-  }
-
+    
   type Vote {
     answer: String
     poll_id: String
@@ -56,6 +49,10 @@ scalar Date
     password: String  
   }
 
+  type Votes {
+    answer: String
+    count: Int
+  }
 `;
 
 export const userMutationTypeDefs = `
@@ -73,4 +70,5 @@ export const voteMutationsTypeDefs = `
 `;
 export const pollQueriesTypeDefs = `
     allPolls: [Poll]
+    votes(pollId:String): [Votes]
 `;

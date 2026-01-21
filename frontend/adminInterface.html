@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+  <head>
+    <title>VotingSystem</title>
+  </head>
+  <body>
+    <h2>Admin</h2>
+    <input id="poll" placeholder="Poll" />
+    <input id="answer" placeholder="Answer" />
+    <button id="createPollBtn">Create Poll</button>
+    <button id="seePollsBtn">See Polls</button>
+
+    <p id="message"></p>
+
+    <script>
+      const endpoint = "http://localhost:4000/graphql";
+      const createPollBtn = document.getElementById("createPollBtn");
+      const seePollsBtn = document.getElementById("seePollsBtn");
+      const message = document.getElementById("message");
+
+      createPollBtn.addEventListener("click", async () => {
+        const poll = document.getElementById("poll").value;
+        const answer = document.getElementById("answer").value;
+
+        const mutation = `
+               mutation Mutation($input: createPollInput) {
+                  createPoll(input: $input) {
+                  options
+                  answer
+              }
+          }
+      }
+              `;
+        try {
+          const response = await fetch(endpoint, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              query: mutation,
+              variables: { input: { poll, answer } },
+            }),
+          });
+          console.log("asdas", response);
+          const result = await response.json();
+          console.log(result);
+          if (!result) {
+            message.textContent = `Poll created unsuccessful`;
+          } else {
+            message.textContent = "Poll created!";
+          }
+        } catch (error) {
+          message.textContent = "Error connecting to server";
+        }
+      });
+    </script>
+  </body>
+</html>

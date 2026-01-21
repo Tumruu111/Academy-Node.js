@@ -3,14 +3,41 @@ import { Poll, Vote, User } from "../db/models.ts";
 import { type IVote } from "../types/votes.ts";
 import { type IUser } from "../types/users.ts";
 import { type IPoll } from "../types/polls.ts";
+import { Types } from "mongoose";
 
 export const pollQueries = {
-  allPolls: async (_root: any, { user }: IContext) => {
+  allPolls: async (_root: any, args: undefined, { user }: IContext) => {
     console.log(user);
     if (!user) {
       throw new Error("Token required!");
     }
     const seePolls = await Poll.find({});
+    console.log(seePolls);
     return seePolls;
+  },
+
+  votes: async (_parent: undefined, { pollId }: { pollId: string }) => {
+    const votes = await Vote.aggregate([
+      {
+        $match: {
+          poll_id: { $eq: new Types.ObjectId(pollId) },
+        },
+      },
+      {
+        $group: {
+          _id: "$answer",
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          answer: "$_id",
+          count: 1,
+        },
+      },
+    ]);
+
+    return votes;
   },
 };

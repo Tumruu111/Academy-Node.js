@@ -21,9 +21,9 @@
         const password = document.getElementById("password").value;
 
         const mutation = `
-         mutation Mutation($input: loginInput) {
-          login(input: $input)
-          }
+         mutation AdminLogin($input: adminLogin) {
+          adminLogin(input: $input)
+        }
         `;
         try {
           const response = await fetch(endpoint, {
@@ -42,16 +42,11 @@
             message.textContent = `Login unsuccessful`;
           } else {
             message.textContent = "Logged in";
+            window.location.href = "adminInterface.html";
           }
         } catch (error) {
           message.textContent = "Error connecting to server";
         }
-      });
-      signupBtn.addEventListener("click", async () => {
-        window.location.href = "signup.html";
-      });
-      adminLoginBtn.addEventListener("click", async () => {
-        window.location.href = "adminLogin.html";
       });
     </script>
   </body>
