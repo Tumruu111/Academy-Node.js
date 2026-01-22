@@ -12,7 +12,6 @@ export const pollQueries = {
       throw new Error("Token required!");
     }
     const seePolls = await Poll.find({});
-    console.log(seePolls);
     return seePolls;
   },
 

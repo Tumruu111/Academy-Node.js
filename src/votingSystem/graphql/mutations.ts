@@ -33,7 +33,6 @@ export const userMutations = {
       SECRET_KEY,
       { expiresIn: "2h" },
     );
-
     return token;
   },
   login: async (_root: any, { input }: { input: IUser }) => {
