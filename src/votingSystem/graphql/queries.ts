@@ -11,6 +11,9 @@ export const pollQueries = {
     if (!user) {
       throw new Error("Token required!");
     }
+    if (user.role !== 0) {
+      throw new Error("Admin access required!");
+    }
     const seePolls = await Poll.find({});
     return seePolls;
   },

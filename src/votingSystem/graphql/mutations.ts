@@ -19,12 +19,10 @@ export const userMutations = {
     if (user.role !== 0) {
       throw new Error("Not admin");
     }
-
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       throw new Error("Invalid password");
     }
-
     const token = jwt.sign(
       {
         email: user.email,
@@ -68,16 +66,21 @@ export const pollMutations = {
     if (!user) {
       throw new Error("Token required");
     }
+
     if (user.role !== 0) {
+      throw new Error("Admin access required");
     }
+
     try {
       const userPoll = await Poll.create({
         poll: input.poll,
         options: input.options,
       });
+
       console.log("Created poll:", userPoll);
       return userPoll;
     } catch (error) {
+      console.error(error);
       throw new Error("Failed to create poll");
     }
   },

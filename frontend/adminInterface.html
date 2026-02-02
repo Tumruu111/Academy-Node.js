@@ -2,92 +2,149 @@
 <html>
   <head>
     <title>VotingSystem</title>
+    <style>
+      .option {
+        display: block;
+        margin: 5px 0;
+      }
+    </style>
   </head>
   <body>
     <h2>Admin</h2>
-    <input id="poll" placeholder="Poll" />
-    <input id="answer" placeholder="Answer" />
+
+    <input id="poll" placeholder="Poll question" />
+    <br /><br />
+
+    <input
+      id="optionCount"
+      type="number"
+      min="2"
+      placeholder="Number of options"
+    />
+    <button id="generateOptionsBtn">Generate Options</button>
+
+    <div id="optionsContainer"></div>
+
+    <br />
     <button id="createPollBtn">Create Poll</button>
     <button id="seePollsBtn">See Polls</button>
-    <pre id="output"></pre>
 
+    <pre id="output"></pre>
     <p id="message"></p>
 
     <script>
       const endpoint = "http://localhost:4000/graphql";
-      const createPollBtn = document.getElementById("createPollBtn");
-      const seePollsBtn = document.getElementById("seePollsBtn");
+
+      const optionsContainer = document.getElementById("optionsContainer");
       const message = document.getElementById("message");
 
-      createPollBtn.addEventListener("click", async () => {
-        const poll = document.getElementById("poll").value;
-        const answer = document.getElementById("answer").value;
+      document
+        .getElementById("generateOptionsBtn")
+        .addEventListener("click", () => {
+          const count = Number(document.getElementById("optionCount").value);
+          optionsContainer.innerHTML = "";
 
-        const mutation = `
-               mutation Mutation($input: createPollInput) {
-                  createPoll(input: $input) {
-                  options
-                  answer
-              }
+          if (!count || count < 2) {
+            message.textContent = "Please enter at least 2 options";
+            return;
           }
+
+          for (let i = 0; i < count; i++) {
+            const input = document.createElement("input");
+            input.placeholder = `Option ${i + 1}`;
+            input.className = "option";
+            optionsContainer.appendChild(input);
+          }
+        });
+
+      document
+        .getElementById("createPollBtn")
+        .addEventListener("click", async () => {
+          const poll = document.getElementById("poll").value;
+
+          const options = Array.from(document.querySelectorAll(".option")).map(
+            (input) => input.value,
+          );
+
+          if (!poll || options.some((o) => !o)) {
+            message.textContent = "Please fill in poll and all options";
+            return;
+          }
+
+          const mutation = `
+            mutation CreatePoll($input: createPollInput) {
+              createPoll(input: $input) {
+                _id
+                options
+              }
+            }
+          `;
+
+          try {
+            const response = await fetch(endpoint, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                query: mutation,
+                variables: {
+                  input: {
+                    poll,
+                    options,
+                  },
+                },
+              }),
+            });
+
+            const result = await response.json();
+            console.log(result);
+
+            message.textContent = result.errors
+              ? "Poll creation failed"
+              : "Poll created successfully!";
+          } catch (err) {
+            message.textContent = "Error connecting to server";
+          }
+        });
+
+      seePollsBtn.addEventListener("click", async () => {
+        const query = `
+    query {
+      allPolls {
+        _id
+        options
+        createdAt
+        updatedAt
       }
-              `;
+    }
+  `;
+
         try {
           const response = await fetch(endpoint, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-              query: mutation,
-              variables: { input: { poll, answer } },
-            }),
+            body: JSON.stringify({ query }),
           });
+
           const result = await response.json();
-          console.log(result);
-          if (!result) {
-            message.textContent = `Poll created unsuccessful`;
-          } else {
-            message.textContent = "Poll created!";
+          console.log("GraphQL result:", result);
+
+          if (result.errors) {
+            message.textContent = "Error fetching polls";
+            console.error(result.errors);
+            return;
           }
+
+          const polls = result.data.allPolls; // ✅ FIXED
+          document.getElementById("output").textContent = JSON.stringify(
+            polls,
+            null,
+            2,
+          );
         } catch (error) {
-          message.textContent = "Error connecting to server";
+          message.textContent = "Server connection error";
         }
-      });
-      seePollsBtn.addEventListener("click", async () => {
-        const query = `
-          query allPolls {
-            allPolls {
-            _id
-            createdAt
-            options
-            updatedAt
-      }
-    }
-
-  `;
-
-        const response = await fetch(endpoint, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ query }),
-        });
-
-        const result = await response.json();
-        console.log("GraphQL result:", result);
-
-        if (result.errors) {
-          console.error(result.errors);
-          return;
-        }
-        const polls = result.data.polls;
-        document.getElementById("output").textContent = JSON.stringify(
-          polls,
-          null,
-          2,
-        );
       });
     </script>
   </body>
