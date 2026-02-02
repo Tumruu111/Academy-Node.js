@@ -33,7 +33,7 @@ export const updateIMDbService = async (req: Request, res: Response) => {
   const { title, imdb } = req.body;
   const update = await Movies.updateOne(
     { title: title },
-    { $set: { "imdb.rating": imdb } }
+    { $set: { "imdb.rating": imdb } },
   );
   res.send(update);
 };
@@ -41,7 +41,7 @@ export const updateGenreService = async (req: Request, res: Response) => {
   const { title, genre } = req.body;
   const update = await Movies.updateOne(
     { title: title },
-    { $push: { genres: genre } }
+    { $push: { genres: genre } },
   );
   res.send(update);
 };
@@ -54,7 +54,11 @@ export const updateByYearService = async (req: Request, res: Response) => {
   const { year } = req.body;
   const updateByYear = await Movies.updateMany(
     { year: year },
-    { $inc: { "imdb.rating": 0.5 } }
+    { $inc: { "imdb.rating": 0.5 } },
   );
   res.send(updateByYear);
+};
+export const getMovies = async (req: Request, res: Response) => {
+  const movies = await Movies.find({}).limit(10);
+  res.send(movies);
 };
