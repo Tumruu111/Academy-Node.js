@@ -1,18 +1,18 @@
-import { Router } from "express";
-import {
-  deleteMovieService,
-  getMovies,
-  putMovieService,
-  updateByYearService,
-  updateGenreService,
-  updateIMDbService,
-} from "./controllers";
+import { Router, Request, Response } from "express";
+import { Movies } from "./models";
 
 export const movieRouter = Router();
 
-movieRouter.post("/putMovies", putMovieService);
-movieRouter.put("/updateIMDB", updateIMDbService);
-movieRouter.put("/updateGenre", updateGenreService);
-movieRouter.delete("/deleteMovie", deleteMovieService);
-movieRouter.put("/updateByYear", updateByYearService);
-movieRouter.get("/getMovies", getMovies);
+movieRouter.get("/movies", async (req: Request, res: Response) => {
+  const { genre } = req.query;
+
+  const query = {} as any;
+
+  if (genre) {
+    query.genres = genre;
+  }
+
+  const movies = await Movies.find(query).limit(10);
+
+  res.json(movies);
+});
