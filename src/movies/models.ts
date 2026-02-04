@@ -18,22 +18,18 @@ export interface IMoviesDocument extends Document {
   title: string;
   year: number;
   plot: string;
-  genres: string[];
+  genre: string[];
   runtime: number;
   cast: string[];
   poster: string;
   fullpolt: string;
-  released: Date;
+  relased: Date;
   languages: string[];
   directors: string[];
   awards: {
     wins: number;
     nominations: number;
     text: string;
-  };
-  imdb: {
-    rating: number;
-    votes: number;
   };
   tomatoes: ITomatoes;
 }
@@ -53,29 +49,25 @@ const TomatoesSchema: Schema<ITomatoes> = new Schema(
     rotten: Number,
     lastUpdated: Date,
   },
-  { _id: false }
+  { _id: false },
 );
 
 const MovieSchema: Schema<IMoviesDocument> = new Schema({
   plot: { type: String, required: true },
-  genres: { type: [String], required: true },
+  genre: { type: [String], required: true },
   title: { type: String, required: true },
   year: { type: Number, required: true },
   runtime: { type: Number, required: true },
   cast: { type: [String], required: true },
   poster: { type: String, required: true },
   fullpolt: { type: String, required: true },
-  released: { type: Date, required: true, default: new Date() },
+  relased: { type: Date, required: true, default: new Date() },
   languages: { type: [String], required: true },
   directors: { type: [String], required: true },
   awards: {
     wins: { type: Number },
     nominations: { type: Number },
     text: { type: String },
-  },
-  imdb: {
-    rating: { type: Number },
-    votes: { type: Number },
   },
   tomatoes: TomatoesSchema,
 });
