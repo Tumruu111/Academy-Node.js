@@ -12,7 +12,12 @@ movieRouter.get("/movies", async (req: Request, res: Response) => {
     query.genres = genre;
   }
 
-  const movies = await Movies.find(query).limit(10);
+  const movies = await Movies.find(query).limit(25);
 
   res.json(movies);
+});
+movieRouter.post("/addMovies", async (req: Request, res: Response) => {
+  const { title, poster, plot, year } = req.body;
+  const movie = await Movies.insertOne({ title, plot, poster, year });
+  res.send(movie);
 });
