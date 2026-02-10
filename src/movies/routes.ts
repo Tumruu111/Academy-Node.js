@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
-import { Movies } from "./models";
+import { Movies, Comments } from "./models";
+import { Types } from "mongoose";
 
 export const movieRouter = Router();
 
@@ -21,3 +22,19 @@ movieRouter.post("/addMovies", async (req: Request, res: Response) => {
   const movie = await Movies.insertOne({ title, plot, poster, year });
   res.send(movie);
 });
+
+movieRouter.get(
+  "/movies/:movieId/comments",
+  async (req: Request, res: Response) => {
+    const { movieId } = req.params;
+
+    if (!movieId) {
+      return res.status(400).json({ message: "Invalid movie id" });
+    }
+    const comments = await Comments.find({
+      movie_id: new Types.ObjectId(movieId),
+    });
+
+    res.json(comments);
+  },
+);

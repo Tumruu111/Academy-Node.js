@@ -1,4 +1,4 @@
-import { Document, Schema, model } from "mongoose";
+import { Document, Schema, model, Types } from "mongoose";
 
 interface IRating {
   rating: number;
@@ -73,3 +73,20 @@ const MovieSchema: Schema<IMoviesDocument> = new Schema({
 });
 
 export const Movies = model<IMoviesDocument>("movies", MovieSchema);
+
+export interface ICommentDocuments extends Document {
+  name: string;
+  email: string;
+  movie_id: Types.ObjectId;
+  text: string;
+  date: Date;
+}
+const CommentSchema: Schema<ICommentDocuments> = new Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  movie_id: { type: Schema.Types.ObjectId, required: true, ref: "movies" },
+  text: { type: String, required: true },
+  date: { type: Date },
+});
+
+export const Comments = model<ICommentDocuments>("comments", CommentSchema);
