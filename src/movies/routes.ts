@@ -1,6 +1,10 @@
 import { Router, Request, Response } from "express";
+<<<<<<< HEAD
 import { Movies, Comments } from "./models";
 import { Types } from "mongoose";
+=======
+import { Movies } from "./models";
+>>>>>>> 94dbd65fb92320ab3a7be57030ee085d566ef767
 
 export const movieRouter = Router();
 
@@ -13,6 +17,7 @@ movieRouter.get("/movies", async (req: Request, res: Response) => {
     query.genres = genre;
   }
 
+<<<<<<< HEAD
   const movies = await Movies.find(query).limit(25);
 
   res.json(movies);
@@ -38,3 +43,14 @@ movieRouter.get(
     res.json(comments);
   },
 );
+=======
+  const movies = await Movies.find(query).limit(10);
+
+  res.json(movies);
+});
+
+movieRouter.post("/addMovie", async (req: Request, res: Response) => {
+  console.log(req.body);
+  res.json({ success: true });
+});
+>>>>>>> 94dbd65fb92320ab3a7be57030ee085d566ef767
