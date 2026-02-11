@@ -4,7 +4,6 @@ import bodyParser from "body-parser";
 import { movieRouter } from "./movies/routes.ts";
 import cors from "cors";
 
-// Express app
 const app = express();
 
 app.use(cors());
@@ -12,7 +11,6 @@ app.use(bodyParser.json());
 
 app.use("/movie", movieRouter);
 
-// MongoDB connection
 mongoose
   .connect(
     "mongodb+srv://tumruu1999_db_user:lB9ey0anCeEPUjWE@cluster0.pk5bjjn.mongodb.net/sample_mflix",
@@ -24,4 +22,4 @@ mongoose
     console.error("MongoDB connection error:", err);
   });
 
-app.listen(3000, () => console.log("Server running on port 3000"));
+app.listen(3001, () => console.log("Server running on port 3000"));

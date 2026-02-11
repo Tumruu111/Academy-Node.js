@@ -12,12 +12,22 @@ movieRouter.get("/movies", async (req: Request, res: Response) => {
     query.genres = genre;
   }
 
-  const movies = await Movies.find(query).limit(10);
+  const movies = await Movies.find(query).limit(25);
 
   res.json(movies);
 });
-
 movieRouter.post("/addMovie", async (req: Request, res: Response) => {
-  console.log(req.body);
-  res.json({ success: true });
+  try {
+    console.log("BODY RECEIVED:", req.body);
+
+    const movie = new Movies(req.body);
+
+    const savedMovie = await movie.save();
+
+    console.log("SAVED:", savedMovie);
+
+    res.status(201).json(savedMovie);
+  } catch (err) {
+    console.error("SAVE ERROR:", err);
+  }
 });

@@ -22,7 +22,7 @@ export interface IMoviesDocument extends Document {
   runtime: number;
   cast: string[];
   poster: string;
-  fullpolt: string;
+  fullplot: string;
   relased: Date;
   languages: string[];
   directors: string[];
@@ -60,7 +60,7 @@ const MovieSchema: Schema<IMoviesDocument> = new Schema({
   runtime: { type: Number, required: true },
   cast: { type: [String], required: true },
   poster: { type: String, required: true },
-  fullpolt: { type: String, required: true },
+  fullplot: { type: String, required: true },
   relased: { type: Date, required: true, default: new Date() },
   languages: { type: [String], required: true },
   directors: { type: [String], required: true },
