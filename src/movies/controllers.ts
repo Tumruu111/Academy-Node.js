@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 // import { Router, Request, Response } from "express";
 // import { Movies } from "./models";
 
@@ -60,4 +58,3 @@
 //   );
 //   res.send(updateByYear);
 // };
->>>>>>> 94dbd65fb92320ab3a7be57030ee085d566ef767

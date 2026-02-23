@@ -1,31 +1,53 @@
 import { Router, Request, Response } from "express";
-<<<<<<< HEAD
 import { Movies, Comments } from "./models";
 import { Types } from "mongoose";
-=======
-import { Movies } from "./models";
->>>>>>> 94dbd65fb92320ab3a7be57030ee085d566ef767
 
 export const movieRouter = Router();
 
 movieRouter.get("/movies", async (req: Request, res: Response) => {
-  const { genre } = req.query;
+  try {
+    const {
+      genre,
+      page = "1",
+      limit = "10",
+      sortBy = "title",
+      order = "asc",
+      search = "",
+    } = req.query;
 
-  const query = {} as any;
+    const query: any = {};
+    if (genre) {
+      query.genres = genre;
+    }
 
-  if (genre) {
-    query.genres = genre;
+    const pageNumber = parseInt(page as string);
+    const limitNumber = parseInt(limit as string);
+    const skip = (pageNumber - 1) * limitNumber;
+
+    let sortOrder: number;
+    if (order === "desc") {
+      sortOrder = -1;
+    } else {
+      sortOrder = 1;
+    }
+    const movies = await Movies.find(query)
+      .sort({ [sortBy as string]: sortOrder as 1 | -1 })
+      .skip(skip)
+      .limit(limitNumber);
+
+    const total = await Movies.countDocuments(query);
+
+    res.json({
+      page: pageNumber,
+      limit: limitNumber,
+      total,
+      totalPages: Math.ceil(total / limitNumber),
+      movies,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server Error" });
   }
-
-<<<<<<< HEAD
-  const movies = await Movies.find(query).limit(25);
-
-  res.json(movies);
-});
-movieRouter.post("/addMovies", async (req: Request, res: Response) => {
-  const { title, poster, plot, year } = req.body;
-  const movie = await Movies.insertOne({ title, plot, poster, year });
-  res.send(movie);
 });
 
 movieRouter.get(
@@ -43,14 +65,19 @@ movieRouter.get(
     res.json(comments);
   },
 );
-=======
-  const movies = await Movies.find(query).limit(10);
-
-  res.json(movies);
-});
 
 movieRouter.post("/addMovie", async (req: Request, res: Response) => {
-  console.log(req.body);
-  res.json({ success: true });
+  try {
+    console.log("BODY RECEIVED:", req.body);
+
+    const movie = new Movies(req.body);
+
+    const savedMovie = await movie.save();
+
+    console.log("SAVED:", savedMovie);
+
+    res.status(201).json(savedMovie);
+  } catch (err) {
+    console.error("SAVE ERROR:", err);
+  }
 });
->>>>>>> 94dbd65fb92320ab3a7be57030ee085d566ef767
